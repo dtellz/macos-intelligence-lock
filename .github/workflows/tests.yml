@@ -13,14 +13,9 @@ permissions:
 
 jobs:
   regression:
-    name: Regression (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    name: Regression (macOS)
+    runs-on: macos-latest
     timeout-minutes: 10
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest]
 
     defaults:
       run:

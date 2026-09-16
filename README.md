@@ -1,4 +1,10 @@
-# Apple PCC Block
+<h1 align="center">macOS Intelligence Lock</h1>
+
+<p align="center">
+  <a href="https://github.com/dtellz/macos-intelligence-lock/actions/workflows/tests.yml">
+    <img src="https://github.com/dtellz/macos-intelligence-lock/actions/workflows/tests.yml/badge.svg?branch=master" alt="Tests">
+  </a>
+</p>
 
 **Prefer on-device AI. Keep the restriction visible, understandable, and reversible.**
 

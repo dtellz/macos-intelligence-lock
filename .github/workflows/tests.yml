@@ -1,0 +1,59 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+# Tests only need to read the repository.
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    name: Regression (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+
+    defaults:
+      run:
+        shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+
+      - name: Check shell syntax
+        run: /bin/bash -n apple-pcc-block.sh
+
+      - name: Run sandboxed regression tests
+        run: |
+          set -u
+
+          # Keep the Python from setup-python, but make the test harness
+          # resolve Bash and shell utilities from the OS, not Homebrew.
+          python_path="$(command -v python)"
+          export PATH="/bin:/usr/bin:/usr/sbin:/sbin"
+
+          /bin/bash --version
+          "$python_path" --version
+          if [ "$(uname -s)" = "Darwin" ]; then
+            sw_vers
+          fi
+
+          # Temporary fixtures only: no real hosts edits, sudo, or PCC calls.
+          "$python_path" test_apple_pcc_block.py
